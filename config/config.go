@@ -1,8 +1,17 @@
 package config
 
 const (
-	Binary = iota + 1
-	Text
+	EncodingBinary = iota + 1
+	EncodingText
 )
 
-var Encoding = Text
+const (
+	ProtoTCP = iota + 1
+	ProtoGRPC
+	ProtoGRPCX
+)
+
+var (
+	Proto    = ProtoGRPC
+	Encoding = EncodingText
+)

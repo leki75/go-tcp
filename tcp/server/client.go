@@ -1,4 +1,4 @@
-package tcp
+package server
 
 import (
 	"encoding/binary"
@@ -8,7 +8,7 @@ import (
 	"github.com/leki75/go-tcp/config"
 )
 
-const clientBuffer = 1024
+const clientBuffer = 64
 
 type client struct {
 	server *server
@@ -71,9 +71,9 @@ func (c *client) writeLoop() {
 	var buf net.Buffers
 	for message := range c.data {
 		switch config.Encoding {
-		case config.Binary:
+		case config.EncodingBinary:
 			buf = binaryMessage(message, c.data)
-		case config.Text:
+		case config.EncodingText:
 			buf = jsonMessage(message, c.data)
 		}
 

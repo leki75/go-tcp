@@ -2,45 +2,33 @@ package producer
 
 import (
 	"testing"
-	"time"
+
+	"github.com/leki75/go-tcp/config"
+	"github.com/leki75/go-tcp/proto"
 )
 
-func BenchmarkTrade_MarshalBinary(b *testing.B) {
-	trade := Trade{
-		Symbol:     [11]byte{'A', 'A', 'P', 'L'},
-		Price:      123.456,
-		Size:       100,
-		Conditions: [4]byte{'@'},
-		Exchange:   'N',
-		Tape:       'C',
-	}
+func BenchmarkTCPTradeProducer_binary(b *testing.B) {
+	config.Encoding = config.EncodingBinary
+	ch := make(chan []byte, 1)
+	go TCPTradeProducer(ch)
 	for i := 0; i < b.N; i++ {
-		trade.Id = uint64(i)
-		trade.Timestamp = time.Now().UnixNano()
-
-		_, err := trade.MarshalBinary()
-		if err != nil {
-			b.Fail()
-		}
+		<-ch
 	}
 }
 
-func BenchmarkTrade_MarshalJSON(b *testing.B) {
-	trade := Trade{
-		Symbol:     [11]byte{'A', 'A', 'P', 'L'},
-		Price:      123.456,
-		Size:       100,
-		Conditions: [4]byte{'@'},
-		Exchange:   'N',
-		Tape:       'C',
-	}
+func BenchmarkTCPTradeProducer_text(b *testing.B) {
+	config.Encoding = config.EncodingText
+	ch := make(chan []byte, 1)
+	go TCPTradeProducer(ch)
 	for i := 0; i < b.N; i++ {
-		trade.Id = uint64(i)
-		trade.Timestamp = time.Now().UnixNano()
+		<-ch
+	}
+}
 
-		_, err := trade.MarshalJSON()
-		if err != nil {
-			b.Fail()
-		}
+func BenchmarkGRPCTradeProducer(b *testing.B) {
+	ch := make(chan *proto.Trade, 1)
+	go GRPCTradeProducer(ch)
+	for i := 0; i < b.N; i++ {
+		<-ch
 	}
 }

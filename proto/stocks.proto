@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/leki75/go-tcp/proto";
+
+package gotcp;
+
+// Original
+message Trade {
+    uint64 id = 1;
+    string symbol = 2;
+    int32 exchange = 3;
+    double price = 4;
+    uint32 volume = 5;
+    uint64 timestamp = 6;
+    bytes conditions = 7;
+    int32 tape = 8;
+    int64 receivedAt = 9;
+}
+
+message TradeParams {}
+
+service Stocks {
+    rpc Trades(TradeParams) returns (stream Trade) {}
+}

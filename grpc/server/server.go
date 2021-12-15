@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/leki75/go-tcp/proto"
+	"github.com/leki75/go-tcp/schema/proto"
 	"google.golang.org/grpc"
 )
 

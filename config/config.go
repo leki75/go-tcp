@@ -2,16 +2,17 @@ package config
 
 const (
 	EncodingBinary = iota + 1
-	EncodingText
+	EncodingMsgPack
+	EncodingJSON
 )
 
 const (
 	ProtoTCP = iota + 1
 	ProtoGRPC
-	ProtoGRPCX
+	ProtoWS
 )
 
 var (
-	Proto    = ProtoGRPC
-	Encoding = EncodingText
+	Encoding = EncodingJSON
+	Proto    = ProtoTCP
 )

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/leki75/go-tcp/proto"
+	"github.com/leki75/go-tcp/schema/proto"
 )
 
 type stocksClient struct {

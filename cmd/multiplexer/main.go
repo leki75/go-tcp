@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/leki75/go-tcp/config"
 	grpcclient "github.com/leki75/go-tcp/grpc/client"
-	"github.com/leki75/go-tcp/proto"
+	"github.com/leki75/go-tcp/schema/proto"
 	tcpclient "github.com/leki75/go-tcp/tcp/client"
 	tcpserver "github.com/leki75/go-tcp/tcp/server"
 )

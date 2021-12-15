@@ -4,16 +4,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/leki75/go-tcp/proto"
+	"github.com/leki75/go-tcp/schema/proto"
 	"github.com/stretchr/testify/assert"
 )
 
 func BenchmarkMarshalTrade(b *testing.B) {
 	trade := proto.Trade{
-		Symbol:     "AAPL",
+		Symbol:     "12345678901",
 		Price:      123.456,
 		Volume:     100,
-		Conditions: []byte{'@'},
+		Conditions: []byte{'1', '2', '3', '4'},
 		Exchange:   'N',
 		Tape:       'C',
 	}
@@ -34,8 +34,8 @@ func TestMarshalUnmarshalTrade(t *testing.T) {
 		Timestamp:  uint64(now) - uint64(time.Millisecond),
 		ReceivedAt: now,
 		Volume:     987,
-		Symbol:     "AAPL",
-		Conditions: []byte{'@'},
+		Symbol:     "12345678901",
+		Conditions: []byte{'1', '2', '3', '4'},
 		Exchange:   'X',
 		Tape:       'T',
 	}

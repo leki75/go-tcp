@@ -1,14 +1,14 @@
-package binary
+package json
 
 import (
 	"testing"
 	"time"
 
-	"github.com/leki75/go-tcp/schema"
+	"github.com/leki75/go-tcp/schema/raw"
 )
 
 func BenchmarkMarshalTrade(b *testing.B) {
-	trade := schema.Trade{
+	trade := raw.Trade{
 		Symbol:     [11]byte{'A', 'A', 'P', 'L'},
 		Price:      123.456,
 		Size:       100,
@@ -20,10 +20,6 @@ func BenchmarkMarshalTrade(b *testing.B) {
 		trade.Id = uint64(i)
 		trade.Timestamp = time.Now().UnixNano()
 		trade.ReceivedAt = trade.Timestamp
-
-		_, err := MarshalTrade(&trade)
-		if err != nil {
-			b.Fail()
-		}
+		_ = MarshalTrade(&trade)
 	}
 }

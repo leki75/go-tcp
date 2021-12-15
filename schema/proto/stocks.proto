@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/leki75/go-tcp/proto";
+option go_package = "github.com/leki75/go-tcp/schema/proto";
 
 package gotcp;
 

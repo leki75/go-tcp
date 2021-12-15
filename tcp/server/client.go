@@ -73,7 +73,7 @@ func (c *client) writeLoop() {
 		switch config.Encoding {
 		case config.EncodingBinary:
 			buf = binaryMessage(message, c.data)
-		case config.EncodingText:
+		case config.EncodingJSON:
 			buf = jsonMessage(message, c.data)
 		}
 

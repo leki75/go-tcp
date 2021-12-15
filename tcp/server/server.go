@@ -5,9 +5,9 @@ import (
 	"net"
 
 	"github.com/leki75/go-tcp/config"
-	"github.com/leki75/go-tcp/proto"
-	protobinary "github.com/leki75/go-tcp/proto/binary"
-	protojson "github.com/leki75/go-tcp/proto/json"
+	"github.com/leki75/go-tcp/schema/proto"
+	protobinary "github.com/leki75/go-tcp/schema/proto/binary"
+	protojson "github.com/leki75/go-tcp/schema/proto/json"
 )
 
 type server struct {
@@ -63,7 +63,7 @@ func (s *server) runProto(ch <-chan *proto.Trade) {
 			switch config.Encoding {
 			case config.EncodingBinary:
 				b = protobinary.MarshalTrade(trade)
-			case config.EncodingText:
+			case config.EncodingJSON:
 				b = protojson.MarshalTrade(trade)
 			}
 

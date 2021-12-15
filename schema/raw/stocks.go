@@ -1,4 +1,4 @@
-package schema
+package raw
 
 type Trade struct {
 	Id         uint64   // i - 8

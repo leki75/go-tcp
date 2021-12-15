@@ -4,10 +4,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/leki75/go-tcp/schema"
+	"github.com/leki75/go-tcp/schema/raw"
 )
 
-func MarshalTrade(t *schema.Trade) ([]byte, error) {
+func MarshalTrade(t *raw.Trade) []byte {
 	b := make([]byte, 0, 222)
 
 	// Type
@@ -65,5 +65,5 @@ func MarshalTrade(t *schema.Trade) ([]byte, error) {
 	b = time.Unix(0, t.ReceivedAt).AppendFormat(b, time.RFC3339Nano) // 220 - max 35
 	b = append(b, '"', '}')                                          // 222
 
-	return b, nil
+	return b
 }

@@ -124,5 +124,5 @@ var Stocks_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "proto/stocks.proto",
+	Metadata: "schema/proto/stocks.proto",
 }

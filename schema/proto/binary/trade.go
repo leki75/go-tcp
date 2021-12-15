@@ -4,11 +4,12 @@ import (
 	"encoding/binary"
 	"math"
 
-	"github.com/leki75/go-tcp/proto"
+	"github.com/leki75/go-tcp/schema/proto"
 )
 
 func MarshalTrade(t *proto.Trade) []byte {
 	b := make([]byte, 53)
+	// TODO: add type
 	binary.BigEndian.PutUint64(b[0:], t.Id)
 	binary.BigEndian.PutUint64(b[8:], uint64(t.Timestamp))
 	binary.BigEndian.PutUint64(b[16:], uint64(t.ReceivedAt))
@@ -22,7 +23,7 @@ func MarshalTrade(t *proto.Trade) []byte {
 }
 
 func UnmarshalTrade(b []byte) *proto.Trade {
-	t := &proto.Trade{
+	return &proto.Trade{
 		Id:         binary.BigEndian.Uint64(b),
 		Timestamp:  binary.BigEndian.Uint64(b[8:]),
 		ReceivedAt: int64(binary.BigEndian.Uint64(b[16:])),
@@ -33,7 +34,6 @@ func UnmarshalTrade(b []byte) *proto.Trade {
 		Exchange:   int32(b[51]),
 		Tape:       int32(b[52]),
 	}
-	return t
 }
 
 func GetConditions(cond []byte) []byte {

@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/leki75/go-tcp/proto"
+	"github.com/leki75/go-tcp/schema/proto"
 )
 
 func MarshalTrade(t *proto.Trade) []byte {
@@ -37,7 +37,7 @@ func MarshalTrade(t *proto.Trade) []byte {
 	// Conditions
 	b = append(b, `,"c":[`...)               // 112
 	b = append(b, '"', t.Conditions[0], '"') // 115
-	for i := 1; i < len(t.Conditions); i-- {
+	for i := 1; i < len(t.Conditions); i++ {
 		b = append(b, ',', '"', t.Conditions[i], '"') // 127 - 3*4
 	}
 	b = append(b, ']') // 128

@@ -1,14 +1,14 @@
-package json
+package msgpack
 
 import (
 	"testing"
 	"time"
 
-	"github.com/leki75/go-tcp/schema"
+	"github.com/leki75/go-tcp/schema/raw"
 )
 
-func BenchmarkTrade_MarshalJSON(b *testing.B) {
-	trade := schema.Trade{
+func BenchmarkMarshalTrade(b *testing.B) {
+	trade := raw.Trade{
 		Symbol:     [11]byte{'A', 'A', 'P', 'L'},
 		Price:      123.456,
 		Size:       100,
@@ -19,10 +19,7 @@ func BenchmarkTrade_MarshalJSON(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		trade.Id = uint64(i)
 		trade.Timestamp = time.Now().UnixNano()
-
-		_, err := MarshalTrade(&trade)
-		if err != nil {
-			b.Fail()
-		}
+		trade.ReceivedAt = trade.Timestamp
+		_ = MarshalTrade(&trade)
 	}
 }

@@ -11,7 +11,7 @@ generate: $(GOPATH)/bin/protoc-gen-go-vtproto
 		--go-grpc_opt=paths=source_relative \
 		--go-vtproto_opt=paths=source_relative \
 		--go-vtproto_opt=features=marshal+unmarshal+size \
-		proto/stocks.proto
+		schema/proto/stocks.proto
 
 $(GOPATH)/bin/protoc-gen-go-vtproto:
 	go install github.com/planetscale/vtprotobuf/cmd/protoc-gen-go-vtproto@v0.2.0

@@ -8,31 +8,31 @@ import (
 )
 
 func MarshalTrade(t *proto.Trade) []byte {
-	b := make([]byte, 53)
-	// TODO: add type
-	binary.BigEndian.PutUint64(b[0:], t.Id)
-	binary.BigEndian.PutUint64(b[8:], uint64(t.Timestamp))
-	binary.BigEndian.PutUint64(b[16:], uint64(t.ReceivedAt))
-	binary.BigEndian.PutUint64(b[24:], math.Float64bits(t.Price))
-	binary.BigEndian.PutUint32(b[32:], t.Volume)
-	copy(b[36:40], t.Conditions)
-	copy(b[40:51], t.Symbol)
-	b[51] = byte(t.Exchange)
-	b[52] = byte(t.Tape)
+	b := make([]byte, 54)
+	b[0] = 't'
+	copy(b[1:12], t.Symbol)
+	copy(b[12:16], t.Conditions)
+	binary.BigEndian.PutUint64(b[16:], t.Id)
+	binary.BigEndian.PutUint64(b[24:], uint64(t.Timestamp))
+	binary.BigEndian.PutUint64(b[32:], uint64(t.ReceivedAt))
+	binary.BigEndian.PutUint64(b[40:], math.Float64bits(t.Price))
+	binary.BigEndian.PutUint32(b[48:], t.Volume)
+	b[52] = byte(t.Exchange)
+	b[53] = byte(t.Tape)
 	return b
 }
 
 func UnmarshalTrade(b []byte) *proto.Trade {
 	return &proto.Trade{
-		Id:         binary.BigEndian.Uint64(b),
-		Timestamp:  binary.BigEndian.Uint64(b[8:]),
-		ReceivedAt: int64(binary.BigEndian.Uint64(b[16:])),
-		Price:      math.Float64frombits(binary.BigEndian.Uint64(b[24:])),
-		Volume:     binary.BigEndian.Uint32(b[32:]),
-		Conditions: GetConditions(b[36:40]),
-		Symbol:     GetSymbol(b[40:51]),
-		Exchange:   int32(b[51]),
-		Tape:       int32(b[52]),
+		Id:         binary.BigEndian.Uint64(b[16:]),
+		Timestamp:  binary.BigEndian.Uint64(b[24:]),
+		ReceivedAt: int64(binary.BigEndian.Uint64(b[32:])),
+		Price:      math.Float64frombits(binary.BigEndian.Uint64(b[40:])),
+		Volume:     binary.BigEndian.Uint32(b[48:]),
+		Symbol:     GetSymbol(b[1:12]),
+		Conditions: GetConditions(b[12:16]),
+		Exchange:   int32(b[52]),
+		Tape:       int32(b[53]),
 	}
 }
 

@@ -13,13 +13,13 @@ import (
 func main() {
 	var err error
 	switch config.Proto {
-	case config.ProtoTCP:
+	case config.TCP:
 		log.Println("Proto TCP")
 		ch := make(chan []byte, 10000)
-		go producer.ByteSliceTradeProducer(ch)
+		go producer.ByteSliceRawTradeProducer(ch)
 		err = tcpserver.NewServer(ch).Listen(":8080")
 
-	case config.ProtoGRPC:
+	case config.GRPC:
 		log.Println("Proto gRPC")
 		ch := make(chan *proto.Trade, 10000)
 		go producer.ProtobufTradeProducer(ch)

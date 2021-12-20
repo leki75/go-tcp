@@ -25,12 +25,14 @@ func (c *client) Connect(addr string) error {
 		return err
 	}
 
-	buf := make([]byte, 32768)
+	buf := make([]byte, 65536)
 	for {
 		n, err := conn.Read(buf)
 		if err != nil {
 			return err
 		}
-		c.ch <- buf[:n]
+		b := make([]byte, n)
+		copy(b, buf[:n])
+		c.ch <- b
 	}
 }

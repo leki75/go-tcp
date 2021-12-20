@@ -10,7 +10,7 @@ import (
 )
 
 // ByteSliceTradeProducer is blocking should be running in a goroutine
-func ByteSliceTradeProducer(ch chan<- []byte) {
+func ByteSliceRawTradeProducer(ch chan<- []byte) {
 	trade := raw.Trade{
 		Symbol:     [11]byte{'A', 'A', 'P', 'L'},
 		Price:      123.456,

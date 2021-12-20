@@ -1,18 +1,22 @@
 package config
 
-const (
-	EncodingBinary = iota + 1
-	EncodingMsgPack
-	EncodingJSON
-)
+type encoding int
 
 const (
-	ProtoTCP = iota + 1
-	ProtoGRPC
-	ProtoWS
+	Binary encoding = iota + 1
+	MsgPack
+	JSON
+)
+
+type proto int
+
+const (
+	TCP proto = iota + 1
+	GRPC
+	WebSocket
 )
 
 var (
-	Encoding = EncodingJSON
-	Proto    = ProtoTCP
+	Encoding = JSON
+	Proto    = GRPC
 )

@@ -1,11 +1,8 @@
 package server
 
 import (
-	"encoding/binary"
 	"log"
 	"net"
-
-	"github.com/leki75/go-tcp/config"
 )
 
 const clientBuffer = 64
@@ -38,45 +35,50 @@ var (
 )
 
 func binaryMessage(message []byte, ch <-chan []byte) net.Buffers {
-	size := len(ch)
-	buf := make(net.Buffers, size+2)
-	buf[0] = []byte{'t', 0, 0} // header: type(1), size(2)
-	binary.BigEndian.PutUint16(buf[0][1:], uint16(size+1))
-	buf[1] = message
-	size += 2
-	for i := 2; i < size; i++ {
-		buf[i] = <-ch
+	numMessages := len(ch) + 1
+	buf := make(net.Buffers, numMessages*2+1)
+
+	buf[0] = []byte{byte(numMessages >> 8), byte(numMessages)} // message count header
+	// buf[1] = []byte{byte(len(message) >> 8), byte(len(message))}
+	buf[1] = []byte{byte(len(message))}
+	buf[2] = message
+	var b []byte
+	count := 0
+	for i := 3; i < numMessages*2+1; i += 2 {
+		b = <-ch
+		//buf[i] = []byte{byte(len(b) >> 8), byte(len(b))}
+		buf[i] = []byte{byte(len(b))}
+		buf[i+1] = b
+		count++
 	}
 	return buf
 }
 
-func jsonMessage(message []byte, ch <-chan []byte) net.Buffers {
-	size := len(ch)
-	buf := make(net.Buffers, size*2+3)
-	buf[0] = openingBracket
-	buf[1] = message
-	buf[size*2+2] = closingBracket
-	for i, j := 0, 2; i < size; i++ {
-		buf[j] = separatorComma
-		j++
-		buf[j] = <-ch
-		j++
-	}
-	return buf
-}
+// func jsonMessage(message []byte, ch <-chan []byte) net.Buffers {
+// 	numMessages := len(ch) + 1
+// 	buf := make(net.Buffers, numMessages*2+1)
+// 	buf[0] = openingBracket
+// 	buf[1] = message
+// 	buf[numMessages*2] = closingBracket
+// 	for i := 2; i < numMessages*2+1; i += 2 {
+// 		buf[i] = separatorComma
+// 		buf[i+1] = <-ch
+// 	}
+// 	return buf
+// }
 
 func (c *client) writeLoop() {
 	defer c.close()
 
 	var buf net.Buffers
 	for message := range c.data {
-		switch config.Encoding {
-		case config.EncodingBinary:
-			buf = binaryMessage(message, c.data)
-		case config.EncodingJSON:
-			buf = jsonMessage(message, c.data)
-		}
-
+		// switch config.Encoding {
+		// case config.EncodingBinary:
+		// 	buf = binaryMessage(message, c.data)
+		// case config.EncodingJSON:
+		// 	buf = jsonMessage(message, c.data)
+		// }
+		buf = binaryMessage(message, c.data)
 		_, err := buf.WriteTo(c.conn)
 		if err != nil {
 			break

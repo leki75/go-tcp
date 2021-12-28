@@ -4,11 +4,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/leki75/go-tcp/config"
-	"github.com/leki75/go-tcp/schema/proto"
-	"github.com/leki75/go-tcp/schema/proto/binary"
-	"github.com/leki75/go-tcp/schema/proto/json"
-	"github.com/leki75/go-tcp/schema/proto/msgpack"
+	"github.com/gobwas/ws"
 )
 
 type server struct {
@@ -27,16 +23,6 @@ func NewServer(ch <-chan []byte) *server {
 	return s
 }
 
-func NewProtoServer(ch <-chan *proto.Trade) *server {
-	s := &server{
-		register:   make(chan *client),
-		unregister: make(chan *client),
-		clients:    make(map[*client]struct{}),
-	}
-	go s.runProto(ch)
-	return s
-}
-
 func (s *server) run(ch <-chan []byte) {
 	for {
 		select {
@@ -52,33 +38,8 @@ func (s *server) run(ch <-chan []byte) {
 	}
 }
 
-func (s *server) runProto(ch <-chan *proto.Trade) {
-	var b []byte
-	for {
-		select {
-		case c := <-s.register:
-			s.clients[c] = struct{}{}
-		case c := <-s.unregister:
-			delete(s.clients, c)
-		case trade := <-ch:
-			switch config.Encoding {
-			case config.Binary:
-				b = binary.MarshalTrade(trade)
-			case config.JSON:
-				b = json.MarshalTrade(trade)
-			case config.MsgPack:
-				b = msgpack.MarshalTrade(trade)
-			}
-
-			for c := range s.clients {
-				c.Send(b)
-			}
-		}
-	}
-}
-
 func (s *server) Listen(addr string) error {
-	log.Println("Listening on tcp", addr)
+	log.Println("Listening on gobwas", addr)
 	listener, err := net.Listen("tcp4", addr)
 	if err != nil {
 		return err
@@ -86,6 +47,10 @@ func (s *server) Listen(addr string) error {
 
 	for {
 		conn, err := listener.Accept()
+		if err != nil {
+			return err
+		}
+		_, err = ws.Upgrade(conn)
 		if err != nil {
 			return err
 		}

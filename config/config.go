@@ -17,6 +17,8 @@ const (
 )
 
 var (
-	Encoding = JSON
-	Proto    = GRPC
+	Encoding = MsgPack
+	Proto    = TCP
 )
+
+var WebsocketLibrary = "gorilla"
